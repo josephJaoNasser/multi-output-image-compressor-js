@@ -79,8 +79,6 @@ The code sample below uploads all the compressed images (original, small, medium
 
 Obviously, you are free to upload the images wherever you want. It just so happens that the project I was working on is using mongodb
 ```javascript
-
-//compress images then upload to database
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
 const streamifier = require('streamifier');
