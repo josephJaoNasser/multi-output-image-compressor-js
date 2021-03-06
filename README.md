@@ -7,6 +7,7 @@ An image compressor module using sharp js that can compress single or multiple i
 
 - Sharp JS must be installed before using this module.
 - Use Multer to upload the image to memory to get the buffer.
+- Optional: Use streamifier if you want to create a readable stream out of the file buffer
 
 ## Compress Single
 Accepts a request object with an image file inside.
@@ -73,7 +74,7 @@ router.post('/upload', async(req, res)=>{
 
 ```
 
-### Sample code when uploading to mongodb gridfs
+### Sample code when uploading to mongodb using gridfs
 ```javascript
 
 //compress images then upload to database
@@ -134,3 +135,4 @@ router.post('/upload', async(req, res)=>{
   })  
 })
 ```
+Obviously, you are free to upload the images wherever you want. It just so happens that the project I was working on uses mongodb
