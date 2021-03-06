@@ -1,6 +1,8 @@
 # multi-output-image-compressor-js
 Compress an image/s multiple times. This compressor returns multiple images resized to small, medium, and large. Compressing a single image also returns a "tiny" variant, along with the small, medium and large images.
 
+The codes below also show an example on how to upload to mongodb using gridfs stream
+
 ### Download the code to see how it works or if you want to modify the Sharp JS parameters or the code itself
 
 ## Dependencies
