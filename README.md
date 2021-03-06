@@ -19,7 +19,7 @@ An array of objects which contain the same image in their large, medium, small, 
 
 Uploading the file to memory using multer allows you to get the file's buffer.
 
-When using express router:
+When using with express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
@@ -51,7 +51,7 @@ An array of objects which contain the same set of images in their large, medium,
 
 Uploading the file to memory using multer allows you to get the file's buffer.
 
-When using express router:
+When using with express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
