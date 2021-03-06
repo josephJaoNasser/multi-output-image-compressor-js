@@ -1,6 +1,8 @@
 # multi-image-compressor-js
 An image compressor module using sharp js that can compress single or multiple images. This compressor returns multiple images resized to small, medium, and large. Compressing a single image also returns a "tiny" variant, along with the small, medium and large images.
 
+### Download the code to see how it works or if you want to modify the Sharp JS parameters or the code itself
+
 ## Dependencies
 
 - Sharp JS must be installed before using this module.
