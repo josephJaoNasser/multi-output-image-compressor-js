@@ -35,7 +35,7 @@ router.post('/upload', async(req, res)=>{
 })
 
 ```
-Accepts a request object with an image file inside.
+Accepts a request object with an image file inside. DO NOT pass req.file as a parameter, use req instead.
 
 __The image file object must contain the file's buffer for this to work.__
 
@@ -67,7 +67,7 @@ router.post('/upload', async(req, res)=>{
 })
 
 ```
-Accepts a request object with an array of image files inside. 
+Accepts a request object with an array of image files inside. DO NOT pass req.file as a parameter, use req instead.
 
 __The image file object must contain the file's buffer for this to work.__
 
