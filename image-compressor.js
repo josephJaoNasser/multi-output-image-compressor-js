@@ -1,6 +1,8 @@
 const sharp = require('sharp');
 
-//Compress single
+/*==============================
+        Compress single
+===============================*/
 const compressSingle = async (req, res,next) => {
     
   let compressedFiles =[];
@@ -91,7 +93,9 @@ const compressSingle = async (req, res,next) => {
 };
 
 
-//Compress multiple
+/*==============================
+        Compress multiple
+===============================*/
 const compressMultiple = async (req, res,next) => {
     
   let compressedFiles =[];
