@@ -1,5 +1,6 @@
 const sharp = require('sharp');
 
+//Compress single
 const compressSingle = async (req, res,next) => {
     
   let compressedFiles =[];
@@ -11,7 +12,8 @@ const compressSingle = async (req, res,next) => {
           field: 'profileImage'
       })
   };    
-     
+  
+  //compress to large size
   let newFile = {...req.file};     
   const filenameLarge = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_large$1')        
   await sharp(req.file.buffer)
@@ -27,7 +29,8 @@ const compressSingle = async (req, res,next) => {
       }).catch((err)=>{
           errors = err
       })
-
+   
+  //compress to medium size
   newFile = {...req.file};      
   const filenameMedium = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_medium$1')
   
@@ -44,7 +47,8 @@ const compressSingle = async (req, res,next) => {
       }).catch((err)=>{
           errors = err
       })
-      
+  
+  //compress to small size
   newFile = {...req.file};   
   const filenameSmall = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_small$1') 
   
@@ -61,7 +65,8 @@ const compressSingle = async (req, res,next) => {
       }).catch((err)=>{
           errors = err
       })
- 
+  
+  //compress to tiny size
   newFile = {...req.file};  
   const filenameTiny = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_tiny$1') 
   
@@ -78,14 +83,15 @@ const compressSingle = async (req, res,next) => {
       }).catch((err)=>{
           errors = err
       })   
-
+  
+  //Add the original file to the compressed files
   compressedFiles = compressedFiles.concat(req.file)
 
   next(errors, compressedFiles)
 };
 
 
-
+//Compress multiple
 const compressMultiple = async (req, res,next) => {
     
   let compressedFiles =[];
@@ -94,7 +100,8 @@ const compressMultiple = async (req, res,next) => {
   if (!req.files){
       next()
   };    
-     
+  
+  //Compress large
   await Promise.all(    
       req.files.map(async file => {    
           let newFile = {...file};     
@@ -115,7 +122,8 @@ const compressMultiple = async (req, res,next) => {
               })
       })
   );
-
+  
+  //Compress medium
   await Promise.all(    
       req.files.map(async file => {    
           let newFile = {...file};     
@@ -136,7 +144,8 @@ const compressMultiple = async (req, res,next) => {
               })
       })
   );    
-
+  
+  //Compress small (or relatively small that is)
   await Promise.all(    
       req.files.map(async file => {    
           let newFile = {...file};
@@ -157,7 +166,8 @@ const compressMultiple = async (req, res,next) => {
               })     
       })
   );
-
+  
+  //Add the compressed files to the original array
   req.files = req.files.concat(compressedFiles)
 
   next(errors, req.files)
