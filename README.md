@@ -75,7 +75,7 @@ router.post('/upload', async(req, res)=>{
 ```
 
 
-## Sample code when uploading to mongodb using gridfs
+## Sample code for uploading to mongodb with gridfs
 The code sample below uploads all the compressed images (original, small, medium, large, tiny) to mongodb.
 
 Obviously, you are free to upload the images wherever you want. It just so happens that the project I was working on is using mongodb
