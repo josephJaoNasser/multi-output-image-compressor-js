@@ -4,6 +4,7 @@ An image compressor module using sharp js that can compress single or multiple i
 ## Dependencies
 
 - Sharp JS must be installed before using this module.
+- Use Multer to upload the image to memory to get the buffer.
 
 ## Compress Single
 Accepts a request object with an image file inside.
@@ -14,13 +15,15 @@ __The image file must contain the file's buffer for this to work.__
 An array of objects which contain the same image in their large, medium, small, and tiny sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 
 Uploading the file to memory using multer allows you to get the file's buffer.
+
+When using express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
 
 //upload to memory using multer
 const memoryStorage = new multer.memoryStorage()
-const uploadToMemory = multer({storage:memoryStorage}).single('profile-image')
+const uploadToMemory = multer({storage:memoryStorage}).single('single-image')
 
 router.post('/upload', async(req, res)=>{ 
   uploadToMemory(req,res, ()=>{
@@ -36,25 +39,6 @@ router.post('/upload', async(req, res)=>{
 
 ```
 
-#### __NOTE:__ Please pass a request object and NOT req.file, the file buffer, or a file object. An alternative is that you can create an object with a "file:" inside and pass that instead.
-```javascript
-//ALTERNATIVE METHOD
-
-const anImageThatIwantToCompress = {
-  file:{
-    buffer: ...
-    // other stuff that would typicaly be here...
-  }
-}
-
-imageCompressor.compressSingle(anImageThatIwantToCompress,res,(err, files)=> {
-
-  //do whatever you want...
-  
-})
-```
-__I haven't tried this method out since i've only been working on it using a REST API, so just let me know any suggestions on how to make it work if it doesn't work__
-
 ## Compress Multiple
 Accepts a request object with an array of image files inside. 
 
@@ -63,13 +47,15 @@ __The image file must contain the file's buffer for this to work.__
 An array of objects which contain the same set of images in their large, medium, small sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 
 Uploading the file to memory using multer allows you to get the file's buffer.
+
+When using express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
 
 //upload to memory using multer
 const memoryStorage = new multer.memoryStorage()
-const uploadToMemory = multer({storage:memoryStorage}).single('profile-image')
+const uploadToMemory = multer({storage:memoryStorage}).array('multiple-images', 10)
 
 router.post('/upload', async(req, res)=>{ 
   uploadToMemory(req,res, ()=>{
@@ -85,28 +71,3 @@ router.post('/upload', async(req, res)=>{
 
 ```
 
-#### __NOTE:__ Please pass a request object and NOT req.files, the file buffers, or a file object. An alternative is that you can create an array of objects with a "files:" inside and pass that instead.
-```javascript
-//ALTERNATIVE METHOD
-
-const imagesThatIwantToCompress = {
-  files:[
-    {
-      buffer: ...
-      // other stuff that would typicaly be here...
-    }
-    {
-      buffer: ...
-      // other stuff that would typicaly be here...
-    }
-    ...
-  ]
-}
-
-imageCompressor.compressMultiple(imagesThatIwantToCompress,res,(err, files)=> {
-
-  //do whatever you want...
-  
-})
-```
-__I haven't tried this method out since i've only been working on it using a REST API, so just let me know any suggestions on how to make it work if it doesn't work__
