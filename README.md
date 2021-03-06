@@ -73,3 +73,64 @@ router.post('/upload', async(req, res)=>{
 
 ```
 
+### Sample code when uploading to mongodb gridfs
+```javascript
+
+//compress images then upload to database
+const imageCompressor = require('./image-compressor')
+const multer = require('multer');
+const streamifier = require('streamifier');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+
+//Create mongo connection using mongoose
+const connectionString = //your connection string here
+const conn = mongoose.createConnection(connectionString)
+
+//Initialize gridfs
+let gridfs;
+
+conn.once('open',()=>{
+    gridfs = Grid(conn.db, mongoose.mongo)
+    gridfs.collection('col')
+})
+
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+const uploadToMemory = multer({storage:memoryStorage}).single('single-image')
+
+router.post('/upload', async(req, res)=>{ 
+  uploadToMemory(req,res, ()=>{
+    imageCompressor.compressSingle(req,res,(err, files) =>{
+      if(err){
+          return res.status(404).json({
+              msg: 'An error has occurred while uploading a picture',
+              error: err
+          })
+       }
+       
+       var uploaded = 0;
+       
+       //Upload each file using gridfs stream
+        files.forEach(file => {
+
+          var writeStream = gridfs.createWriteStream({
+              filename: file.filename,
+              content_type: file.mimetype,
+              root: 'col'
+          });        
+
+          //Streamifier is used to create streams out of buffers
+          streamifier.createReadStream(file.buffer).pipe(writeStream).on('finish',()=>{
+            uploaded++;
+            if(uploaded === files.length){
+                return res.status(201).json({
+                    success: true,
+                })
+            }
+        })
+      })    
+    })
+  })  
+})
+```
