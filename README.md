@@ -43,7 +43,7 @@ An array of objects which contain the same image in their large, medium, small, 
 
 Uploading the file to memory using multer allows you to get the file's buffer.
 
-
+<hr>
 ### Compress Multiple
 When using with express router:
 ```javascript
