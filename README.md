@@ -5,19 +5,32 @@ An image compressor module using sharp js that can compress single or multiple i
 
 - Sharp JS must be installed before using this module.
 
-
 ## Methods
   
 ### Compress Single
 Accepts a request object with an image file inside, appends the array of objects which contain the same image in their large, medium, small, and tiny sizes to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 ```javascript
 const imageCompressor = require('./image-compressor')
+const multer = require('multer');
 
-imageCompressor.compressSingle(req,res,next)
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+const uploadToMemory = multer({storage:memoryStorage}).single('profile-image')
+
+router.post('/upload', async(req, res)=>{ 
+  uploadToMemory(req,res, ()=>{
+    //...
+    imageCompressor.compressSingle(req,res,next)
+    //...
+  })  
+})
+
 ```
 
 #### __NOTE:__ Please pass a request object and NOT req.file, the file buffer, or a file object. An alternative is that you can create an object with a "file:" inside and pass that instead.
 ```javascript
+//alternative method
+
 const anImageThatIwantToCompress = {
   file:{
     buffer: ...
@@ -33,12 +46,26 @@ __I haven't tried this method out since i've only been working on it using a RES
 Accepts a request object with an multiple image files inside, appends an array of objects which contain the same set of images in their large, medium, small sizes to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 ```javascript
 const imageCompressor = require('./image-compressor')
+const multer = require('multer');
 
-imageCompressor.compressMultiple(req,res,next)
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+const uploadToMemory = multer({storage:memoryStorage}).single('profile-image')
+
+router.post('/upload', async(req, res)=>{ 
+  uploadToMemory(req,res, ()=>{
+    //...
+    imageCompressor.compressMultiple(req,res,next)
+    //...
+  })  
+})
+
 ```
 
 #### __NOTE:__ Please pass a request object and NOT req.files, the file buffers, or a file object. An alternative is that you can create an array of objects with a "files:" inside and pass that instead.
 ```javascript
+//alternative method
+
 const imagesThatIwantToCompress = {
   files:[
     {
