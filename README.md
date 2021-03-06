@@ -6,9 +6,10 @@ An image compressor module using sharp js that can compress single or multiple i
 - Sharp JS must be installed before using this module.
 
 ## Compress Single
-Accepts a request object with an image file inside. 
+Accepts a request object with an image file inside.
 
-__The image file must contain the file's buffer for this to work__
+<span style="color:yellow">__The image file must contain the file's buffer for this to work__</span>.
+
 
 An array of objects which contain the same image in their large, medium, small, and tiny sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 ```javascript
