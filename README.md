@@ -12,7 +12,7 @@ The codes below also show an example on how to upload to mongodb using gridfs st
 - Optional: Use streamifier if you want to create a readable stream out of the file buffer
 
 ## Usage
-### Compress Single
+### __Compress Single__
 When using with express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
@@ -43,8 +43,8 @@ An array of objects which contain the same image in their large, medium, small, 
 
 Uploading the file to memory using multer allows you to get the file's buffer.
 
-<hr>
-### Compress Multiple
+
+### __Compress Multiple__
 When using with express router:
 ```javascript
 const imageCompressor = require('./image-compressor')
