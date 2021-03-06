@@ -6,7 +6,9 @@ An image compressor module using sharp js that can compress single or multiple i
 - Sharp JS must be installed before using this module.
 
 ## Compress Single
-Accepts a request object with an image file inside. The image file must contain the file's buffer for this to work
+Accepts a request object with an image file inside. 
+
+__The image file must contain the file's buffer for this to work__
 
 An array of objects which contain the same image in their large, medium, small, and tiny sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 ```javascript
@@ -51,7 +53,9 @@ imageCompressor.compressSingle(anImageThatIwantToCompress,res,(err, files)=> {
 __I haven't tried this method out since i've only been working on it using a REST API, so just let me know any suggestions on how to make it work if it doesn't work__
 
 ## Compress Multiple
-Accepts a request object with an array of image files inside. The image file must contain the file's buffer for this to work.
+Accepts a request object with an array of image files inside. 
+
+__The image file must contain the file's buffer for this to work.__
 
 An array of objects which contain the same set of images in their large, medium, small sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
 ```javascript
