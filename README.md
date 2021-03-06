@@ -16,7 +16,9 @@ The codes below also show an example on how to upload to mongodb using gridfs st
 ```javascript
 const imageCompressor = require('./image-compressor')
 
-imageCompressor.compressSingle(req,res,next)
+imageCompressor.compressSingle(req,res, (err, files)=> {
+   //do whatever you want...
+})
 ```
 
 When using with express router:
@@ -54,7 +56,9 @@ Uploading the file to memory using multer allows you to get the file's buffer.
 ```javascript
 const imageCompressor = require('./image-compressor')
 
-imageCompressor.compressMultiple(req,res,next)
+imageCompressor.compressMultiple(req,res,(err, files)=> {
+   //do whatever you want...
+})
 ```
 
 When using with express router:
