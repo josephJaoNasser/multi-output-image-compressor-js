@@ -19,7 +19,9 @@ router.post('/upload', async(req, res)=>{
   uploadToMemory(req,res, ()=>{
     //...
     imageCompressor.compressSingle(req,res,(err, files) =>{
+    
       //do whatever you want...
+      
     })
     //...
   })  
@@ -39,7 +41,9 @@ const anImageThatIwantToCompress = {
 }
 
 imageCompressor.compressSingle(anImageThatIwantToCompress,res,(err, files)=> {
+
   //do whatever you want...
+  
 })
 ```
 __I haven't tried this method out since i've only been working on it using a REST API, so just let me know any suggestions on how to make it work if it doesn't work__
@@ -58,7 +62,9 @@ router.post('/upload', async(req, res)=>{
   uploadToMemory(req,res, ()=>{
     //...
     imageCompressor.compressMultiple(req,res, (err, files)=> {
+    
       //do whatever you want...
+      
     })
     //...
   })  
@@ -85,7 +91,9 @@ const imagesThatIwantToCompress = {
 }
 
 imageCompressor.compressMultiple(imagesThatIwantToCompress,res,(err, files)=> {
+
   //do whatever you want...
+  
 })
 ```
 __I haven't tried this method out since i've only been working on it using a REST API, so just let me know any suggestions on how to make it work if it doesn't work__
