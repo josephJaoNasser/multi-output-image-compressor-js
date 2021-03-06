@@ -12,6 +12,8 @@ __The image file must contain the file's buffer for this to work.__
 
 
 An array of objects which contain the same image in their large, medium, small, and tiny sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
+
+Uploading the file to memory using multer allows you to get the file's buffer.
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
@@ -59,6 +61,8 @@ Accepts a request object with an array of image files inside.
 __The image file must contain the file's buffer for this to work.__
 
 An array of objects which contain the same set of images in their large, medium, small sizes is appended to the original request parameter. The objects inside the array contain the file information such as the file name, buffer, and sizes.
+
+Uploading the file to memory using multer allows you to get the file's buffer.
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
