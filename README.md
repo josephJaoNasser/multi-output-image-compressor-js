@@ -9,7 +9,9 @@ An image compressor module using sharp js that can compress single or multiple i
 - Use Multer to upload the image to memory to get the buffer.
 - Optional: Use streamifier if you want to create a readable stream out of the file buffer
 
-## Compress Single
+## Usage
+### Compress Single
+
 Accepts a request object with an image file inside.
 
 __The image file object must contain the file's buffer for this to work.__
@@ -42,7 +44,8 @@ router.post('/upload', async(req, res)=>{
 
 ```
 
-## Compress Multiple
+### Compress Multiple
+
 Accepts a request object with an array of image files inside. 
 
 __The image file object must contain the file's buffer for this to work.__
