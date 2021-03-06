@@ -130,6 +130,7 @@ router.post('/upload', async(req, res)=>{
             if(uploaded === files.length){
                 return res.status(201).json({
                     success: true,
+                    msg: "All files have been uploaded"
                 })
             }
         })
