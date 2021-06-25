@@ -1,5 +1,5 @@
 # multi-output-image-compressor-js
-Compress an image/s multiple times. This compressor returns multiple images resized to the "tiny", "small", "medium", "large", and "larger" variants. 
+Compress an image/s multiple times. This compressor returns multiple versions of an image resized to their "tiny", "small", "medium", "large", and "larger" variants. 
 
 ### Download the code to see how it works or if you want to modify the Sharp JS parameters or the code itself
 
