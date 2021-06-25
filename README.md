@@ -17,7 +17,7 @@ npm i multer
 ## Usage
 
 ### __Compress Single__
-compressSingle by default will return 4 resized versions of an image, namely tiny, small, medium, large  
+```compressSingle()``` by default will return an array 4 resized versions of an image, namely tiny, small, medium, large  
 ```javascript
 const imageCompressor = require('./image-compressor')
 
@@ -33,7 +33,7 @@ imageCompressor.compressSingle(file).then(compressedImages => {
 ```
 
 ### __Compress Multiple__
-compressSingle by default will return 4 resized versions of EACH UPLOADED IMAGE, namely tiny, small, medium, large  
+```compressMultiple()``` by default will return an array of 4 resized versions of EACH UPLOADED IMAGE, namely tiny, small, medium, large  
 ```javascript
 const imageCompressor = require('./image-compressor')
 
@@ -49,7 +49,7 @@ imageCompressor.compressMultiple(files).then(compressedImages => {
 ```
 
 ### __Specifying the range of compression__
-```compressSingle()``` and ```compressMultiple()``` has 2 extra parameters: smallestSize and largestSize. By default, they are set to 0 and 4, which means the compressor will return the sizes from "tiny" up to the "larger" sizes, and will always output all 5 versions for each uploaded image.
+```compressSingle()``` and ```compressMultiple()``` has 2 extra parameters: ```smallestSize``` and ```largestSize```. By default, they are set to 0 and 4, which means the compressor will return the sizes from "tiny" up to the "larger" sizes, and will always output all 5 versions for each uploaded image. If yow want to select the range of compression, you must specify the ```smallestSize``` and ```largestSize```
 
 The compression levels are as follows:
 |Level|   Size    |
@@ -60,6 +60,7 @@ The compression levels are as follows:
 | 3 | Large |
 | 4 | Larger |
 
+#### Example 1:
 In the code example below using ```compressSingle()```, the smallest size is set to 1 and largest size is set to 3, hence the function will ONLY return the small, medium, and large variants of the image
 ```javascript
 const imageCompressor = require('./image-compressor')
@@ -75,7 +76,7 @@ imageCompressor.compressSingle(file, 1, 3).then(compressedImages => {
    
 })
 ```
-
+#### Example 2:
 In this example using ```compressMultiple()```,  the smallest and largest sizes are set to 0 and 2 respectively. In this case the function will return the Tiny, Small, and Medium variants of EACH IMAGE.
 ```javascript
 const imageCompressor = require('./image-compressor')
