@@ -1,7 +1,5 @@
 # multi-output-image-compressor-js
-Compress an image/s multiple times. This compressor returns multiple images resized to tiny, small, medium, large, and "larger". 
-
-The codes below also show an example on how to upload to mongodb using gridfs stream
+Compress an image/s multiple times. This compressor returns multiple images resized to the "tiny", "small", "medium", "large", and "larger" variants. 
 
 ### Download the code to see how it works or if you want to modify the Sharp JS parameters or the code itself
 
@@ -14,11 +12,6 @@ npm i sharp
 - __Use Multer memory storage to upload the image to memory to get the file buffer.__
 ```npm
 npm i multer
-```
-
-- _Optional: Use streamifier if you want to create a readable stream out of the file buffer_
-```npm
-npm i streamifier
 ```
 
 ## Usage
@@ -130,14 +123,17 @@ imageCompressor.compressMultipleLarger(file)
 
 ```
 
-### __When using with express router:__
+### __When using with multer and express router:__
+
+When using ```compressSingle()```:
 ```javascript
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
 
 //upload to memory using multer
 const memoryStorage = new multer.memoryStorage()
-const uploadToMemory = multer({storage:memoryStorage}).single('single-image')
+// assuming you appended 'single-image' to the formData that you sent to the server. Call this whatever you want before sending
+const uploadToMemory = multer({storage:memoryStorage}).single('single-image') 
 
 router.post('/upload', uploadToMemory, async(req, res)=>{ 
   imageCompressor.compressSingle(req.file).then(images => {
@@ -153,4 +149,43 @@ router.post('/upload', uploadToMemory, async(req, res)=>{
 
 ```
 
+When using ```compressMultiple()```
+```javascript
+const imageCompressor = require('./image-compressor')
+const multer = require('multer');
+
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+// assuming you appended 'multiple-images' to the formData that you sent to the server. Call this whatever you want before sending
+// you can set the '4' to as many as you want
+const uploadToMemory = multer({storage:memoryStorage}).array('multiple-images', 4)
+
+router.post('/upload', uploadToMemory, async(req, res)=>{ 
+  imageCompressor.compressSingle(req.files).then(images => {
+  
+   //do whatever you want with the images
+   
+  }).catch(err => { 
+  
+   //handle your error
+   
+  }
+})
+
+```
+
+
+## __Additional Information__
+SharpJS uses the ```.resize()``` function to specify the width/height and the ```.jpeg({quality: n })``` to specify the quality of the compressed image. The functions inside this JS file only specify the width when calling ```.resize()```.
+
+The width and quality for each variant are as follows:
+|Level|   Size (width) | Quality |
+| ---  | ---  | ---  |
+| Tiny | 60 | 70 |
+| Small | 150 | 70 |
+| Medium | 320 | 80 |
+| Large | 800 | 90 |
+| Larger | 1500 | 90 |
+
+If the images width is smaller than any of these sizes, the image will still be resized. For example, if an image's size is only 800px and is ran through the ```compressSingleLarger()``` function, then the image will be enlarged up to 1500px. 
 
