@@ -136,7 +136,7 @@ const compressSingleLarge = (file) => {
   })
 }
 
-//compress large
+//compress larger
 const compressSingleLarger = (file) => {
   return new Promise((resolve, reject)=> {
     if(!file){
@@ -317,7 +317,7 @@ const compressMultipleLarger = (files) => {
   })
 }
 
-//compress all
+//compress multi-out
 const compressMultiple = (files, smallestSize = 0, largestSize = 4) => {
   return new Promise((resolve, reject) => {  
     
