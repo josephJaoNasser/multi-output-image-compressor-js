@@ -111,15 +111,15 @@ imageCompressor.compressSingleLarger(file)
 // OR 
 
 // compress multiple
-imageCompressor.compressMultipleTiny(file)
+imageCompressor.compressMultipleTiny(files)
 
-imageCompressor.compressMultipleSmall(file)
+imageCompressor.compressMultipleSmall(files)
 
-imageCompressor.compressMultipleMedium(file)
+imageCompressor.compressMultipleMedium(files)
 
-imageCompressor.compressMultipleLarge(file)
+imageCompressor.compressMultipleLarge(files)
 
-imageCompressor.compressMultipleLarger(file)
+imageCompressor.compressMultipleLarger(files)
 
 ```
 
