@@ -1,181 +1,320 @@
 const sharp = require('sharp');
 
-/*==============================
-        Compress single
-===============================*/
-const compressSingle = async (req, res,next) => {
+/*******************
+   COMPRESS SINGLE
+*******************/
+
+//compress tiny
+const compressSingleTiny = (file) => {
+  return new Promise ((resolve, reject)=> {
     
-  let compressedFiles =[];
-  let errors;
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(Array.isArray(file)){
+      file = file[0]
+    }
+
+    let newFile_tiny = {...file}
+    newFile_tiny.filename = newFile_tiny.filename.replace(/(\.[\w\d_-]+)$/i, '_tiny$1') 
+    
+    sharp(file.buffer)
+        .resize(60)
+        .toFormat("jpeg")
+        .jpeg({ quality: 70 })
+        .toBuffer({resolveWithObject:true})
+        .then((output)=>{
+          newFile_tiny.buffer = output.data
+          newFile_tiny.size = output.info.size
+          resolve(newFile_tiny)
+        }).catch((err)=>{
+            return reject(err)
+        })   
+  }) 
+}
+
+//compress small
+const compressSingleSmall = (file) => {
+  return new Promise((resolve, reject)=> {
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(Array.isArray(file)){
+      file = file[0]
+    }
+
+    let newFile_small = {...file}
+    newFile_small.filename = file.filename.replace(/(\.[\w\d_-]+)$/i, '_small$1') 
   
-  if (!req.file){
-      return res.status(400).json({
-          msg: 'Please upload a profile image',
-          field: 'profileImage'
-      })
-  };    
+    sharp(file.buffer)
+        .resize(150)
+        .toFormat("jpeg")
+        .jpeg({ quality: 70 })
+        .toBuffer({resolveWithObject:true})
+        .then((output)=>{
+          newFile_small.buffer = output.data
+          newFile_small.size = output.info.size
+          resolve(newFile_small)
+        }).catch((err)=>{
+          return reject(err)
+        })
+  })
+}
+
+// compress medium
+const compressSingleMedium = (file) => {
+  return new Promise((resolve, reject)=> {
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(Array.isArray(file)){
+      file = file[0]
+    }
+
+    let newFile_medium = {...file}
+    newFile_medium.filename = file.filename.replace(/(\.[\w\d_-]+)$/i, '_medium$1')
   
-  //compress to large size
-  let newFile = {...req.file};     
-  const filenameLarge = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_large$1')        
-  await sharp(req.file.buffer)
-      .resize(600)
-      .toFormat("jpeg")
-      .jpeg({ quality: 90 })
-      .toBuffer({resolveWithObject:true})
-      .then((output)=>{
-          newFile.filename = filenameLarge
-          newFile.buffer = output.data
-          newFile.size = output.info.size
-          compressedFiles.push(newFile)
-      }).catch((err)=>{
-          errors = err
-      })
-   
-  //compress to medium size
-  newFile = {...req.file};      
-  const filenameMedium = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_medium$1')
-  
-  await sharp(req.file.buffer)
+    sharp(file.buffer)
       .resize(320)
       .toFormat("jpeg")
       .jpeg({ quality: 80 })
       .toBuffer({resolveWithObject:true})
       .then((output)=>{
-          newFile.filename = filenameMedium
-          newFile.buffer = output.data
-          newFile.size = output.info.size
-          compressedFiles.push(newFile)
+        newFile_medium.buffer = output.data
+        newFile_medium.size = output.info.size
+        resolve(newFile_medium)
       }).catch((err)=>{
-          errors = err
+        return reject(err)
       })
-  
-  //compress to small size
-  newFile = {...req.file};   
-  const filenameSmall = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_small$1') 
-  
-  await sharp(req.file.buffer)
-      .resize(150)
-      .toFormat("jpeg")
-      .jpeg({ quality: 70 })
-      .toBuffer({resolveWithObject:true})
-      .then((output)=>{
-          newFile.filename = filenameSmall
-          newFile.buffer = output.data
-          newFile.size = output.info.size
-          compressedFiles.push(newFile)
-      }).catch((err)=>{
-          errors = err
-      })
-  
-  //compress to tiny size
-  newFile = {...req.file};  
-  const filenameTiny = req.file.filename.replace(/(\.[\w\d_-]+)$/i, '_tiny$1') 
-  
-  await sharp(req.file.buffer)
-      .resize(60)
-      .toFormat("jpeg")
-      .jpeg({ quality: 70 })
-      .toBuffer({resolveWithObject:true})
-      .then((output)=>{
-          newFile.filename = filenameTiny
-          newFile.buffer = output.data
-          newFile.size = output.info.size
-          compressedFiles.push(newFile)
-      }).catch((err)=>{
-          errors = err
-      })   
-  
-  //Add the original file to the compressed files
-  compressedFiles = compressedFiles.concat(req.file)
+  })  
+}
 
-  next(errors, compressedFiles)
-};
+//compress large
+const compressSingleLarge = (file) => {
+  return new Promise((resolve, reject)=> {
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
 
-
-/*==============================
-        Compress multiple
-===============================*/
-const compressMultiple = async (req, res,next) => {
+    if(Array.isArray(file)){
+      file = file[0]
+    }
+    let newFile_large = {...file}
+    newFile_large.filename = newFile_large.filename.replace(/(\.[\w\d_-]+)$/i, '_large$1') 
     
-  let compressedFiles =[];
-  let errors;
-  
-  if (!req.files){
-      next()
-  };    
-  
-  //Compress large
-  await Promise.all(    
-      req.files.map(async file => {    
-          let newFile = {...file};     
-          const filenameLarge = file.filename.replace(/(\.[\w\d_-]+)$/i, '_large$1')
-          
-          await sharp(file.buffer)
-              .resize(1500)
-              .toFormat("jpeg")
-              .jpeg({ quality: 90 })
-              .toBuffer({resolveWithObject:true})
-              .then((output)=>{
-                  newFile.filename = filenameLarge
-                  newFile.buffer = output.data
-                  newFile.size = output.info.size
-                  compressedFiles.push(newFile)
-              }).catch((err)=>{
-                  errors = err
-              })
+    sharp(file.buffer)
+      .resize(800)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toBuffer({resolveWithObject:true})
+      .then((output)=>{
+        newFile_large.buffer = output.data
+        newFile_large.size = output.info.size
+        resolve(newFile_large)
+      }).catch((err)=>{
+        return reject(err)
       })
-  );
-  
-  //Compress medium
-  await Promise.all(    
-      req.files.map(async file => {    
-          let newFile = {...file};     
-          const filenameMedium = file.filename.replace(/(\.[\w\d_-]+)$/i, '_medium$1')
-          
-          await sharp(file.buffer)
-              .resize(600)
-              .toFormat("jpeg")
-              .jpeg({ quality: 80 })
-              .toBuffer({resolveWithObject:true})
-              .then((output)=>{
-                  newFile.filename = filenameMedium
-                  newFile.buffer = output.data
-                  newFile.size = output.info.size
-                  compressedFiles.push(newFile)
-              }).catch((err)=>{
-                  errors = err
-              })
-      })
-  );    
-  
-  //Compress small (or relatively small that is)
-  await Promise.all(    
-      req.files.map(async file => {    
-          let newFile = {...file};
-          const filenameSmall = file.filename.replace(/(\.[\w\d_-]+)$/i, '_small$1') 
-          
-          await sharp(file.buffer)
-              .resize(400)
-              .toFormat("jpeg")
-              .jpeg({ quality: 70 })
-              .toBuffer({resolveWithObject:true})
-              .then((output)=>{
-                  newFile.filename = filenameSmall
-                  newFile.buffer = output.data
-                  newFile.size = output.info.size
-                  compressedFiles.push(newFile)
-              }).catch((err)=>{
-                  errors = err
-              })     
-      })
-  );
-  
-  //Add the compressed files to the original array
-  req.files = req.files.concat(compressedFiles)
+  })
+}
 
-  next(errors, req.files)
-};
+//compress large
+const compressSingleLarger = (file) => {
+  return new Promise((resolve, reject)=> {
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
 
-module.exports.compressSingle = compressSingle;
-module.exports.compressMultiple = compressMultiple;
+    if(Array.isArray(file)){
+      file = file[0]
+    }
+    let newFile_larger = {...file}
+    newFile_larger.filename = newFile_larger.filename.replace(/(\.[\w\d_-]+)$/i, '_larger$1') 
+    
+    sharp(file.buffer)
+      .resize(1500)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toBuffer({resolveWithObject:true})
+      .then((output)=>{
+        newFile_larger.buffer = output.data
+        newFile_larger.size = output.info.size
+        resolve(newFile_larger)
+      }).catch((err)=>{
+        return reject(err)
+      })
+  })
+}
+
+//compress multi-out
+const compressSingle = (file, smallestSize = 0, largestSize = 4) => { 
+  return new Promise((resolve, reject) => {
+    const compressorArray = [
+      compressSingleTiny,
+      compressSingleSmall,
+      compressSingleMedium,
+      compressSingleLarge,
+      compressSingleLarger
+    ]
+    
+    if(!file){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Number.isInteger(smallestSize) || !Number.isInteger(largestSize)){
+      return reject(console.error('Smallest/largest size must be an integer'))
+    }
+
+    if(smallestSize < 0){
+      return reject(console.error('Smallest size cannot be less than 0'))
+    }
+
+    if(largestSize > compressorArray.length-1){
+      return reject(console.error(`Highest compression level is ${compressorArray.length-1}`))
+    }
+
+    if(smallestSize > largestSize){
+      return reject(console.error('Smallest size cannot be larger than largest size'))
+    }
+
+    if(Array.isArray(file)){
+      file = file[0]
+    }    
+
+    Promise.all(compressorArray.slice(smallestSize,largestSize+1).map((comp)=> {      
+      return comp(file)
+    }))
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+/*******************
+   COMPRESS MULTIPLE
+*******************/
+//compress tiny
+const compressMultipleTiny = (files) => {
+  return new Promise((resolve, reject)=> {
+    
+    if(!files){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Array.isArray(files)){
+      return reject(console.error('Files must be uploaded as an array!'))
+    }
+
+    const compressorArray = files.map(file => compressSingleTiny(file))
+
+    Promise.all(compressorArray)
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+//compress small
+const compressMultipleSmall = (files) => {
+  return new Promise((resolve, reject)=> {
+    
+    if(!files){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Array.isArray(files)){
+      return reject(console.error('Files must be uploaded as an array!'))
+    }
+    
+    const compressorArray = files.map(file => compressSingleSmall(file))
+
+    Promise.all(compressorArray)
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+//compress medium
+const compressMultipleMedium = (files) => {
+  return new Promise((resolve, reject)=> {
+    
+    if(!files){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Array.isArray(files)){
+      return reject(console.error('Files must be uploaded as an array!'))
+    }    
+    
+    const compressorArray = files.map(file => compressSingleMedium(file))
+
+    Promise.all(compressorArray)
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+//compress large
+const compressMultipleLarge = (files) => {
+  return new Promise((resolve, reject)=> {
+    
+    if(!files){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Array.isArray(files)){
+      return reject(console.error('Files must be uploaded as an array!'))
+    }
+    
+    const compressorArray = files.map(file => compressSingleLarge(file))
+
+    Promise.all(compressorArray)
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+//compress larger
+const compressMultipleLarger = (files) => {
+  return new Promise((resolve, reject)=> {    
+    if(!files){
+      return reject(console.error('No file attatched!'))
+    }
+
+    if(!Array.isArray(files)){
+      return reject(console.error('Files must be uploaded as an array!'))
+    }
+    
+    const compressorArray = files.map(file => compressSingleLarger(file))
+
+    Promise.all(compressorArray)
+    .then(compressedImages => resolve(compressedImages))
+    .catch(err => reject(err))
+  })
+}
+
+//compress all
+const compressMultiple = (files, smallestSize = 0, largestSize = 4) => {
+  return new Promise((resolve, reject) => {  
+    
+    const compressorQueue = files.map(file => compressSingle(file, smallestSize, largestSize))
+   
+    Promise.all(compressorQueue)
+    .then(compressedImages => resolve(compressedImages.flat(1)))
+    .catch(err => reject(err))
+  })
+}
+
+module.exports = { 
+  compressSingleTiny,
+  compressSingleSmall,
+  compressSingleMedium,
+  compressSingleLarge,
+  compressSingle,
+  compressMultipleTiny,
+  compressMultipleSmall,
+  compressMultipleMedium,
+  compressMultipleLarge,
+  compressMultipleLarger,
+  compressMultiple
+}
