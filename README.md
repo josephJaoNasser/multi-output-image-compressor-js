@@ -1,5 +1,5 @@
 # multi-output-image-compressor-js
-Compress an image/s multiple times. This compressor returns multiple images resized to small, medium, and large. Compressing a single image also returns a "tiny" variant, along with the small, medium and large images.
+Compress an image/s multiple times. This compressor returns multiple images resized to tiny, small, medium, large, and "larger". 
 
 The codes below also show an example on how to upload to mongodb using gridfs stream
 
@@ -16,8 +16,10 @@ The codes below also show an example on how to upload to mongodb using gridfs st
 ```javascript
 const imageCompressor = require('./image-compressor')
 
-imageCompressor.compressSingle(req,res, (err, files)=> {
-   //do whatever you want...
+imageCompressor.compressSingle(fileBuffer).then(compressedImages => {
+   //do what you want with the compressed images
+}).catch(err => {
+   //handle your error here
 })
 ```
 
@@ -30,16 +32,10 @@ const multer = require('multer');
 const memoryStorage = new multer.memoryStorage()
 const uploadToMemory = multer({storage:memoryStorage}).single('single-image')
 
-router.post('/upload', async(req, res)=>{ 
-  uploadToMemory(req,res, ()=>{
-    //...
-    imageCompressor.compressSingle(req,res,(err, files) =>{
-    
-      //do whatever you want...
-      
-    })
-    //...
-  })  
+router.post('/upload', uploadToMemory, async(req, res)=>{ 
+  imageCompressor.compressMultiple(files).then(images => {
+   //do whatever you want with the images
+  }).catch(err => { //do what you want with the error }
 })
 
 ```
@@ -97,63 +93,6 @@ The code sample below uploads all the compressed images (original, small, medium
 
 Obviously, you are free to upload the images wherever you want. It just so happens that the project I was working on is using mongodb
 ```javascript
-const express = require('express');
-const imageCompressor = require('./image-compressor')
-const multer = require('multer');
-const streamifier = require('streamifier');
-const Grid = require('gridfs-stream');
-const mongoose = require('mongoose');
 
-//Create mongo connection using mongoose
-const connectionString = //your connection string here
-const conn = mongoose.createConnection(connectionString)
-
-//Initialize gridfs
-let gridfs;
-
-conn.once('open',()=>{
-    gridfs = Grid(conn.db, mongoose.mongo)
-    gridfs.collection('col')
-})
-
-//upload to memory using multer
-const memoryStorage = new multer.memoryStorage()
-const uploadToMemory = multer({storage:memoryStorage}).single('single-image')
-
-router.post('/upload', async(req, res)=>{ 
-  uploadToMemory(req,res, ()=>{
-    imageCompressor.compressSingle(req,res,(err, files) =>{
-      if(err){
-          return res.status(404).json({
-              msg: 'An error has occurred while uploading a picture',
-              error: err
-          })
-       }
-       
-       var uploaded = 0;
-       
-       //Upload each file using gridfs stream
-        files.forEach(file => {
-
-          var writeStream = gridfs.createWriteStream({
-              filename: file.filename,
-              content_type: file.mimetype,
-              root: 'col'
-          });        
-
-          //Streamifier is used to create streams out of buffers
-          streamifier.createReadStream(file.buffer).pipe(writeStream).on('finish',()=>{
-            uploaded++;
-            if(uploaded === files.length){
-                return res.status(201).json({
-                    success: true,
-                    msg: "All files have been uploaded"
-                })
-            }
-        })
-      })    
-    })
-  })  
-})
 ```
 
