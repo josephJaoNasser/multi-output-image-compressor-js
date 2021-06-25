@@ -49,7 +49,7 @@ imageCompressor.compressMultiple(files).then(compressedImages => {
 ```
 
 ### __Specifying the range of compression__
-```compressSingle()``` and ```compressMultiple()``` has 2 extra parameters: ```smallestSize``` and ```largestSize```. By default, they are set to 0 and 4, which means the compressor will return the sizes from "tiny" up to the "larger" sizes, and will always output all 5 versions for each uploaded image. If yow want to select the range of compression, you must specify the ```smallestSize``` and ```largestSize```
+```compressSingle()``` and ```compressMultiple()``` has 2 extra parameters: ```smallestSize``` and ```largestSize```. By default, they are set to 0 and 4 respectively, which means the compressor will always output all 5 compressed versions (from "tiny" to "larger") for each uploaded image. If yow want to select the range of compression, you must specify the ```smallestSize``` and ```largestSize```
 
 The compression levels are as follows:
 |Level|   Size    |
