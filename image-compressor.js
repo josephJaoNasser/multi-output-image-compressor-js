@@ -12,6 +12,10 @@ const compressSingleTiny = (file) => {
       return reject(console.error('No file attatched!'))
     }
 
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
+    }
+
     if(Array.isArray(file)){
       file = file[0]
     }
@@ -39,6 +43,10 @@ const compressSingleSmall = (file) => {
   return new Promise((resolve, reject)=> {
     if(!file){
       return reject(console.error('No file attatched!'))
+    }
+
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
     }
 
     if(Array.isArray(file)){
@@ -70,6 +78,10 @@ const compressSingleMedium = (file) => {
       return reject(console.error('No file attatched!'))
     }
 
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
+    }
+
     if(Array.isArray(file)){
       file = file[0]
     }
@@ -99,6 +111,10 @@ const compressSingleLarge = (file) => {
       return reject(console.error('No file attatched!'))
     }
 
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
+    }
+
     if(Array.isArray(file)){
       file = file[0]
     }
@@ -125,6 +141,10 @@ const compressSingleLarger = (file) => {
   return new Promise((resolve, reject)=> {
     if(!file){
       return reject(console.error('No file attatched!'))
+    }
+
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
     }
 
     if(Array.isArray(file)){
@@ -161,6 +181,10 @@ const compressSingle = (file, smallestSize = 0, largestSize = 4) => {
     
     if(!file){
       return reject(console.error('No file attatched!'))
+    }
+
+    if(!file.buffer){
+      return reject(console.error('The attatched file must contain its buffer. Try uploading the file to memory instead of storage.'))
     }
 
     if(!Number.isInteger(smallestSize) || !Number.isInteger(largestSize)){
