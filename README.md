@@ -97,28 +97,36 @@ If you want to compress an image/s to a specific level and return only one outpu
 ```javascript
 const imageCompressor = require('./image-compressor')
 
-// compress single
+// compress single tiny
 imageCompressor.compressSingleTiny(file)
 
+// compress single small
 imageCompressor.compressSingleSmall(file)
 
+// compress single medium
 imageCompressor.compressSingleMedium(file)
 
+// compress single large
 imageCompressor.compressSingleLarge(file)
 
+// compress single larger
 imageCompressor.compressSingleLarger(file)
 
 // OR 
 
-// compress multiple
+// compress multiple tiny
 imageCompressor.compressMultipleTiny(files)
 
+// compress multiple small
 imageCompressor.compressMultipleSmall(files)
 
+// compress multiple medium
 imageCompressor.compressMultipleMedium(files)
 
+// compress multiple large
 imageCompressor.compressMultipleLarge(files)
 
+// compress multiple larger
 imageCompressor.compressMultipleLarger(files)
 
 ```
