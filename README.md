@@ -184,7 +184,7 @@ router.post('/upload', uploadToMemory, async(req, res)=>{
 
 
 ## __Additional Information__
-SharpJS uses the ```.resize()``` function to specify the width/height and the ```.jpeg({quality: n })``` to specify the quality of the compressed image. The functions inside this JS file only specify the width when calling ```.resize()```.
+SharpJS uses the ```.resize()``` function to specify the width/height and the ```.jpeg({quality: n })``` to specify the quality of the compressed image. The functions inside this JS file only specify the width when calling ```.resize()```. The height will automatically adjust based on the width.
 
 The width and quality for each variant are as follows:
 |Level|   Size (width) | Quality |
