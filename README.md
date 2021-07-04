@@ -14,7 +14,7 @@ npm i sharp
 npm i multer
 ```
 
-## Usage
+## Basic Usage
 
 ### __Compress Single__
 ```compressSingle()``` by default will return an array 4 resized versions of an image, namely tiny, small, medium, large  
@@ -48,7 +48,76 @@ imageCompressor.compressMultiple(files).then(compressedImages => {
 })
 ```
 
-### __Specifying the range of compression__
+### __When using with multer and express router:__
+
+When using ```compressSingle()```:
+```javascript
+const imageCompressor = require('./image-compressor')
+const multer = require('multer');
+
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+// assuming you appended 'single-image' to the formData that you sent to the server. Call this whatever you want before sending
+const uploadToMemory = multer({storage:memoryStorage}).single('single-image') 
+
+router.post('/upload', uploadToMemory, async(req, res)=>{ 
+  imageCompressor.compressSingle(req.file).then(images => {
+  
+   //do whatever you want with the images
+   
+  }).catch(err => { 
+  
+   //handle your error
+   
+  }
+})
+
+```
+
+When using ```compressMultiple()```
+```javascript
+const imageCompressor = require('./image-compressor')
+const multer = require('multer');
+
+//upload to memory using multer
+const memoryStorage = new multer.memoryStorage()
+// assuming you appended 'multiple-images' to the formData that you sent to the server. Call this whatever you want before sending
+// you can set the '4' to as many as you want
+const uploadToMemory = multer({storage:memoryStorage}).array('multiple-images', 4)
+
+router.post('/upload', uploadToMemory, async(req, res)=>{ 
+  imageCompressor.compressMultiple(req.files).then(images => { // notice that req.FILES is being passed instead of req.FILE
+  
+   //do whatever you want with the images
+   
+  }).catch(err => { 
+  
+   //handle your error
+   
+  }
+})
+
+```
+
+### __Output__
+For each image fed into the compressor, an array of objects containing the following information(below) will be returned:
+```javascript
+[
+   {
+      fieldname: 'post-media',
+      originalname: 'original name of the image.jpg',
+      encoding: '7bit',
+      mimetype: 'image/png',
+      buffer: <Buffer ff d8 ff db 00 43 00 0a 07 07 08 07 06 0a 08 08 08 0b 0a 0a 0b 0e 18 10 0e 0d 0d 0e 1d 15 16 11 18 23 1f 25 24 22 1f 22 21 26 2b 37 2f 26 29 34 29 21 ... 3294 more bytes>,
+      size: 3344,
+      filename: 'fbb3f7d6a75e348dac3f6c738b9c5d0b_tiny.png'  
+    },
+    
+    ... // small, medium, large and larger versions also included depending on the range selected
+ ]
+```
+
+## __Specifying the range of compression__
 ```compressSingle()``` and ```compressMultiple()``` has 2 extra parameters: ```smallestSize``` and ```largestSize```. By default, they are set to 0 and 4 respectively, which means the compressor will always output all 5 compressed versions (from "tiny" to "larger") for each uploaded image. If yow want to select the range of compression, you must specify the ```smallestSize``` and ```largestSize```
 
 The compression levels are as follows:
@@ -131,24 +200,31 @@ imageCompressor.compressMultipleLarge(files)
 imageCompressor.compressMultipleLarger(files)
 
 ```
-
-### __When using with multer and express router:__
-
-When using ```compressSingle()```:
+## __Creating a readable stream from the file buffer__
+Before the file can be uploaded, the buffer must be converted into a readable stream. An easy way to do this is by using Streamifier
+```
+npm i streamifier
+```
+Once streamifier is installed, we can create a readable stream. The readable stream can be used to upload the files to a database or cloud storage platforms
 ```javascript
+const streamifier = require('streamifier');
 const imageCompressor = require('./image-compressor')
 const multer = require('multer');
 
-//upload to memory using multer
 const memoryStorage = new multer.memoryStorage()
-// assuming you appended 'single-image' to the formData that you sent to the server. Call this whatever you want before sending
 const uploadToMemory = multer({storage:memoryStorage}).single('single-image') 
 
 router.post('/upload', uploadToMemory, async(req, res)=>{ 
-  imageCompressor.compressSingle(req.file).then(images => {
-  
-   //do whatever you want with the images
-   
+  imageCompressor.compressSingle(req.file).then(images => {  
+     
+     const fileStreams = files.map(file => streamifier.createReadStream(file.buffer))
+     
+     fileStreams.forEach(fileReadStream => {
+     
+        //your logic to upload files
+        
+     })
+
   }).catch(err => { 
   
    //handle your error
@@ -157,32 +233,6 @@ router.post('/upload', uploadToMemory, async(req, res)=>{
 })
 
 ```
-
-When using ```compressMultiple()```
-```javascript
-const imageCompressor = require('./image-compressor')
-const multer = require('multer');
-
-//upload to memory using multer
-const memoryStorage = new multer.memoryStorage()
-// assuming you appended 'multiple-images' to the formData that you sent to the server. Call this whatever you want before sending
-// you can set the '4' to as many as you want
-const uploadToMemory = multer({storage:memoryStorage}).array('multiple-images', 4)
-
-router.post('/upload', uploadToMemory, async(req, res)=>{ 
-  imageCompressor.compressSingle(req.files).then(images => {
-  
-   //do whatever you want with the images
-   
-  }).catch(err => { 
-  
-   //handle your error
-   
-  }
-})
-
-```
-
 
 ## __Additional Information__
 SharpJS uses the ```.resize()``` function to specify the width/height and the ```.jpeg({quality: n })``` to specify the quality of the compressed image. The functions inside this JS file only specify the width when calling ```.resize()```. The height will automatically adjust based on the width.
