@@ -100,7 +100,7 @@ router.post('/upload', uploadToMemory, async(req, res)=>{
 ```
 
 ### __Output__
-For each image fed into the compressor, an array of objects containing the following information(below) will be returned:
+An array of objects containing the following information(below) will be returned.
 ```javascript
 [
    {
@@ -113,7 +113,7 @@ For each image fed into the compressor, an array of objects containing the follo
       filename: 'fbb3f7d6a75e348dac3f6c738b9c5d0b_tiny.png'  
     },
     
-    ... // small, medium, large and larger versions also included depending on the range selected
+    ... // small, medium, large and larger versions for each image uploaded also included depending on the range selected
  ]
 ```
 
